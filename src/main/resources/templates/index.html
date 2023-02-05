@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<img id = "img" src="data:image/jpeg;base64,{binary data}" />
+<button type="button" class="btn btn-success p-2 flex-grow-1" id="btnSend" onclick="onSendClick()">
+  Start Streaming
+</button>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+<script>
+const mqtt = require('mqtt/dist/mqtt');
+
+const url = 'tcp://192.168.137.205:1883';
+
+// Create an MQTT client instance
+const options = {
+  // Clean session
+  clean: true,
+  connectTimeout: 4000,
+  // Authentication
+  clientId: 'web',
+  username: 'admin',
+  password: '123456',
+}
+const client  = mqtt.connect(url, options)
+client.on('connect', function () {
+  console.log('Connected')
+  // Subscribe to a topic
+  client.subscribe('test', function (err) {
+    if (!err) {
+      // Publish a message to a topic
+      client.publish('test', 'Hello mqtt')
+    }
+  })
+})
+
+// Receive messages
+client.on('message', function (topic, message) {
+  // message is Buffer
+  console.log(message.toString())
+  client.end()
+})
+
+</script>
+
+</body>
+</html>

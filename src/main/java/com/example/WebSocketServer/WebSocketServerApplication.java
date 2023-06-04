@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class WebSocketServerApplication {
-	public static int port = 8080;
+	public static int port = 8089;
 	public WebSocketServerApplication() {}
 
 	public static void main(String[] args) {

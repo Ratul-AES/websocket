@@ -59,7 +59,7 @@ public class WebSocketService {
         System.out.println();
 
         /*********** Retrieve Packet Data End  *********************/
-
+        sourceId = 1;
         if (messageId == 5) {
             createImage.imageDataBegin(sourceId);
         }

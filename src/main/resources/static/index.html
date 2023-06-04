@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<img id = "img" src="data:image/jpeg;base64,{binary data}" />
+<button type="button" class="btn btn-success p-2 flex-grow-1" id="btnSend" onclick="onSendClick()">
+  Start Streaming
+</button>
+
+<script>
+  const URL = "ws://172.17.17.12:8089/websocket";
+  var socket = new WebSocket(URL);
+  socket.binaryType = "arraybuffer";
+  let image_Slice = new Image();
+  const vid = document.getElementById('video');
+
+  socket.onopen = function(e) {
+      console.log("[open] Connection established");
+  };
+
+  socket.onmessage = function(event) {
+      console.log("[message] Data received from server:");
+
+      var buffer = new Uint8Array(event.data);
+
+      if(buffer.length > 2){
+        const img = document.getElementById('img');
+        img.src =  "data:image/png;base64,"+ btoa(String.fromCharCode.apply(null, buffer));
+
+        //vid.src =  "data:video/mp4;base64,"+ btoa(String.fromCharCode.apply(null, buffer));
+      }
+
+      //vid.load;
+      //vid.play;
+
+      socket.send("msg");
+  };
+
+  socket.onclose = function(event) {
+      if (event.wasClean) {
+          console.log("[close] Connection closed cleanly, code=${event.code} reason=${event.reason}");
+      } else {
+          console.log("[close] Connection died");
+      }
+  };
+
+  socket.onerror = function(error) {
+      console.log("[error] ${error.message}");
+  };
+
+     // Send a message to the WebSocket server
+  function onSendClick() {
+      if (socket.readyState != socket.OPEN) {
+          console.error("webSocket is not open: " + socket.readyState);
+          return;
+      }
+      var msg = "msg";
+      socket.send(msg);
+  }
+</script>
+
+</body>
+</html>
